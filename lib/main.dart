@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled4/res/app_colors.dart';
-import 'package:untitled4/ui/details/product_details.dart';
+import 'package:untitled4/style.dart';
+import 'package:untitled4/ui/details/product_tab0.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        extensions: [OffThemeExtension.defaultValues()],
         fontFamily: 'Avenir',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         appBarTheme: AppBarTheme(
@@ -25,30 +27,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: ProductDetails(),
-    );
-  }
-}
-
-class StackDemo extends StatelessWidget {
-  const StackDemo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox.expand(
-        child: Stack(
-          children: [
-            PositionedDirectional(
-              top: 10.0,
-              start: 10.0,
-              end: 10.0,
-              child: Container(width: 200, height: 200, color: Colors.red),
-            ),
-            Container(width: 150, height: 150, color: Colors.yellow),
-          ],
-        ),
-      ),
+      home: ProductTab0(),
     );
   }
 }
