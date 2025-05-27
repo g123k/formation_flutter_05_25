@@ -9,8 +9,6 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.sizeOf(context).height;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Mes scans'),

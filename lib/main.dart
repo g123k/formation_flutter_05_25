@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/style.dart';
-import 'package:untitled4/ui/details/product_tab0.dart';
+import 'package:untitled4/ui/details/product_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +26,19 @@ class MyApp extends StatelessWidget {
             color: AppColors.blue,
           ),
         ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          selectedItemColor: AppColors.blue,
+          unselectedItemColor: AppColors.gray2,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+        ),
+        navigationBarTheme: const NavigationBarThemeData(
+          indicatorColor: AppColors.blue,
+        ),
       ),
-      home: ProductTab0(),
+      home: ProductDetails(),
     );
   }
 }
