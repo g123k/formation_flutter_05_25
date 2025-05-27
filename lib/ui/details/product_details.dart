@@ -43,6 +43,7 @@ class ProductDetails extends StatelessWidget {
                   children: [
                     Text('Petits pois et carottes'),
                     Text('Cassegrain'),
+                    ProductScores(),
                   ],
                 ),
               ),
@@ -51,5 +52,56 @@ class ProductDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ProductScores extends StatelessWidget {
+  const ProductScores({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [NutriScore(), VerticalDivider(), NovaScore()],
+        ),
+        Divider(),
+        EcoScore(),
+      ],
+    );
+  }
+}
+
+class NutriScore extends StatelessWidget {
+  const NutriScore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO
+    return const Placeholder();
+  }
+}
+
+class NovaScore extends StatelessWidget {
+  const NovaScore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO
+    return const Placeholder();
+  }
+}
+
+class EcoScore extends StatelessWidget {
+  const EcoScore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO
+    return const Placeholder();
   }
 }
