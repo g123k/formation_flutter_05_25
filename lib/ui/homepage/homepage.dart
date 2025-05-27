@@ -33,7 +33,7 @@ class Homepage extends StatelessWidget {
             SvgPicture.asset(AppVectorialImages.illEmpty),
             Spacer(flex: 15),
             Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: 15.0),
+              padding: EdgeInsetsDirectional.only(start: 4.0),
               child: Text(
                 'Vous n\'avez pas encore scanné de produit',
                 textAlign: TextAlign.center,
