@@ -25,6 +25,8 @@ dependencies:
   retrofit: 4.4.2
   json_annotation: 4.9.0
 
+  simple_barcode_scanner: 0.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

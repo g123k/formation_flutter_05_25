@@ -42,44 +42,51 @@ class _ProductTab0State extends State<ProductTab0> {
       context,
     );
 
-    return Scaffold(
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification notification) {
-          _onScroll();
-          return false;
-        },
-        child: SizedBox.expand(
-          child: Stack(
-            children: [
-              BlocBuilder<ProductBloc, ProductState>(
-                builder: (BuildContext context, ProductState state) {
-                  return Image.network(
-                    (state as SuccessProductState).product.picture ?? '',
-                    width: double.infinity,
-                    height: ProductTab0.kImageHeight,
-                    cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
-                    fit: BoxFit.cover,
-                    color: Colors.black.withValues(
-                      alpha: _currentScrollProgress,
-                    ),
-                    colorBlendMode: BlendMode.srcATop,
-                  );
-                },
-              ),
-              Positioned.fill(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: const _Body(),
+    return BlocListener<ProductBloc, ProductState>(
+      listener: (BuildContext context, ProductState state) {
+        //showDialog(context: context, builder: builder)
+      },
+      child: Scaffold(
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification notification) {
+            _onScroll();
+            return false;
+          },
+          child: SizedBox.expand(
+            child: Stack(
+              children: [
+                BlocBuilder<ProductBloc, ProductState>(
+                  builder: (BuildContext context, ProductState state) {
+                    return Image.network(
+                      (state as SuccessProductState).product.picture ?? '',
+                      width: double.infinity,
+                      height: ProductTab0.kImageHeight,
+                      cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
+                      fit: BoxFit.cover,
+                      color: Colors.black.withValues(
+                        alpha: _currentScrollProgress,
+                      ),
+                      colorBlendMode: BlendMode.srcATop,
+                    );
+                  },
                 ),
-              ),
-              PositionedDirectional(
-                child: _HeaderIcon(
-                  icon: Icons.adaptive.arrow_back,
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  onPressed: () => GoRouter.of(context).pop(),
+                Positioned.fill(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: const _Body(),
+                  ),
                 ),
-              ),
-            ],
+                PositionedDirectional(
+                  child: _HeaderIcon(
+                    icon: Icons.adaptive.arrow_back,
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).backButtonTooltip,
+                    onPressed: () => GoRouter.of(context).pop(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

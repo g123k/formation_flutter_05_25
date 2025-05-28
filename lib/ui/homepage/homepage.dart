@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:untitled4/l10n/app_localizations.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
@@ -21,8 +22,26 @@ class Homepage extends StatelessWidget {
           IconButton(
             onPressed: () async {
               // TODO Mettre le scanner ici
-              // GoRouter.of(context).push('/details?barcode=5000159484695');
+              String? barcode = await SimpleBarcodeScanner.scanBarcode(
+                context,
+                barcodeAppBar: const BarcodeAppBar(
+                  appBarTitle: 'Test',
+                  centerTitle: false,
+                  enableBackButton: true,
+                  backButtonIcon: Icon(Icons.arrow_back_ios),
+                ),
+                isShowFlashIcon: true,
+                delayMillis: 2000,
+                cameraFace: CameraFace.back,
+              );
+
+              if (barcode == null || !context.mounted) {
+                return;
+              }
+
+              GoRouter.of(context).push('/details?barcode=$barcode');
             },
+
             icon: Padding(
               padding: const EdgeInsetsDirectional.only(end: 8.0),
               child: Icon(AppIcons.barcode),
