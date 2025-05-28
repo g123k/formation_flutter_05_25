@@ -20,7 +20,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     LoadProductEvent event,
     Emitter<ProductState> emit,
   ) async {
-    emit(LoadingProductState());
+    emit(const LoadingProductState());
     try {
       await Future.delayed(const Duration(seconds: 2));
       final Product product = generateProduct();

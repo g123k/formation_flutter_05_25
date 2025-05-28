@@ -108,7 +108,7 @@ Product generateProduct() => Product(
   quantity: '200g',
   brands: ['Brand 1', 'Brand 2'],
   manufacturingCountries: ['Country 1', 'Country 2'],
-  nutriScore: ProductNutriscore.B,
+  nutriScore: ProductNutriscore.E,
   novaScore: ProductNovaScore.group4,
   ecoScore: ProductGreenScore.D,
   ingredients: ['Ingredient 1', 'Ingredient 2'],
