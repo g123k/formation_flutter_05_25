@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled4/model/product.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
@@ -66,7 +67,7 @@ class _ProductTab0State extends State<ProductTab0> {
                 child: _HeaderIcon(
                   icon: Icons.adaptive.arrow_back,
                   tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  onPressed: () {},
+                  onPressed: () => GoRouter.of(context).pop(),
                 ),
               ),
             ],

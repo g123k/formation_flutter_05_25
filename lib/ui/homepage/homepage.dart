@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/res/app_vectorial_images.dart';
@@ -71,7 +72,9 @@ class Homepage extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(22.0)),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                GoRouter.of(context).push('/details');
+              },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
