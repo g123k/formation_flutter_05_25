@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/ui/details/product_tab0.dart';
+import 'package:untitled4/ui/details/product_tab1.dart';
+import 'package:untitled4/ui/details/product_tab2.dart';
+import 'package:untitled4/ui/details/product_tab3.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key});
@@ -15,7 +18,14 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ProductTab0(),
+      body: Stack(
+        children: [
+          Offstage(offstage: _position != 0, child: ProductTab0()),
+          Offstage(offstage: _position != 1, child: ProductTab1()),
+          Offstage(offstage: _position != 2, child: ProductTab2()),
+          Offstage(offstage: _position != 3, child: ProductTab3()),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _position,
         onTap: (int position) => setState(() {

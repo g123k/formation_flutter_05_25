@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/style.dart';
-import 'package:untitled4/ui/details/product_details.dart';
+import 'package:untitled4/ui/homepage/homepage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           indicatorColor: AppColors.blue,
         ),
       ),
-      home: ProductDetails(),
+      home: Homepage(),
     );
   }
 }

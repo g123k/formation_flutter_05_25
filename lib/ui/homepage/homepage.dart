@@ -15,7 +15,32 @@ class Homepage extends StatelessWidget {
         centerTitle: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              bool? res = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Ma question'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('Oui'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('Non'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              print(res);
+            },
             icon: Padding(
               padding: const EdgeInsetsDirectional.only(end: 8.0),
               child: Icon(AppIcons.barcode),
