@@ -4,6 +4,7 @@ import 'package:untitled4/model/product.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/style.dart';
+import 'package:untitled4/ui/details/product_details.dart';
 
 class ProductTab0 extends StatefulWidget {
   static const double kImageHeight = 300.0;
@@ -39,8 +40,6 @@ class _ProductTab0State extends State<ProductTab0> {
       context,
     );
 
-    Product product = generateProduct();
-
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification notification) {
@@ -51,7 +50,7 @@ class _ProductTab0State extends State<ProductTab0> {
           child: Stack(
             children: [
               Image.network(
-                product.picture ?? '',
+                ProductProvider.of(context).product.picture ?? '',
                 width: double.infinity,
                 height: ProductTab0.kImageHeight,
                 cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
@@ -68,11 +67,7 @@ class _ProductTab0State extends State<ProductTab0> {
               PositionedDirectional(
                 child: _HeaderIcon(
                   icon: Icons.adaptive.arrow_back,
-                  tooltip: MaterialLocalizations
-                      .of(
-                    context,
-                  )
-                      .backButtonTooltip,
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                   onPressed: () => GoRouter.of(context).pop(),
                 ),
               ),
@@ -123,60 +118,37 @@ class _HeaderIconState extends State<_HeaderIcon> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Padding(
-        padding: const EdgeInsetsDirectional.all(8.0)
-    ,
-    child
-    :
-    Material
-    (
-    type
-    :
-    MaterialType
-    .
-    transparency
-    ,
-    child
-    :
-    Tooltip
-    (
-    message
-    :
-    widget
-    .
-    tooltip
-    ,
-    child
-    :
-    InkWell
-    (
-    onTap
-    :
-    widget
-    .
-    onPressed ?? () {},
-    customBorder: const CircleBorder(),
-    child: Ink(
-    padding: const EdgeInsetsDirectional.only(
-    start: 18.0,
-    end: 12.0,
-    top: 15.0,
-    bottom: 15.0,
-    ),
-    decoration: BoxDecoration(
-    shape: BoxShape.circle,
-    color: Colors.white.withValues(alpha: _opacity),
-    ),
-    child: Icon(
-    widget.icon,
-    color: Color.lerp(Colors.white, Colors.black, _opacity),
-    ),
-    ),
-    ),
-    ),
-    ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.all(8.0),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Tooltip(
+            message: widget.tooltip,
+            child: InkWell(
+              onTap: widget.onPressed ?? () {},
+              customBorder: const CircleBorder(),
+              child: Ink(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 18.0,
+                  end: 12.0,
+                  top: 15.0,
+                  bottom: 15.0,
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: _opacity),
+                ),
+                child: Icon(
+                  widget.icon,
+                  color: Color.lerp(Colors.white, Colors.black, _opacity),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
-    }
+  }
 }
 
 class _Body extends StatelessWidget {
@@ -189,9 +161,7 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme
-            .of(context)
-            .scaffoldBackgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: const BorderRadiusDirectional.only(
           topStart: Radius.circular(16.0),
           topEnd: Radius.circular(16.0),
@@ -227,13 +197,15 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Product product = ProductProvider.of(context).product;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Petits pois et carottes', style: context.theme.title1),
+        Text(product.name ?? '-', style: context.theme.title1),
         const SizedBox(height: 3.0),
-        Text('Cassegrain', style: context.theme.title2),
+        Text(product.brands?.join(', ') ?? '-', style: context.theme.title2),
         const SizedBox(height: 8.0),
       ],
     );
@@ -248,6 +220,8 @@ class _Scores extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Product product = ProductProvider.of(context).product;
+
     return DefaultTextStyle(
       style: context.theme.altText,
       child: Container(
@@ -269,7 +243,10 @@ class _Scores extends StatelessWidget {
                       flex: 44,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.only(end: 5.0),
-                        child: _Nutriscore(nutriscore: ProductNutriscore.A),
+                        child: _Nutriscore(
+                          nutriscore:
+                              product.nutriScore ?? ProductNutriscore.unknown,
+                        ),
                       ),
                     ),
                     VerticalDivider(),
@@ -277,7 +254,10 @@ class _Scores extends StatelessWidget {
                       flex: 66,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.only(start: 25.0),
-                        child: _NovaGroup(novaScore: ProductNovaScore.group1),
+                        child: _NovaGroup(
+                          novaScore:
+                              product.novaScore ?? ProductNovaScore.unknown,
+                        ),
                       ),
                     ),
                   ],
@@ -290,7 +270,9 @@ class _Scores extends StatelessWidget {
                 vertical: _verticalPadding,
                 horizontal: _horizontalPadding,
               ),
-              child: _GreenScore(greenScore: ProductGreenScore.A),
+              child: _GreenScore(
+                greenScore: product.ecoScore ?? ProductGreenScore.unknown,
+              ),
             ),
           ],
         ),
@@ -350,11 +332,11 @@ class _NovaGroup extends StatelessWidget {
   String _findLabel() {
     return switch (novaScore) {
       ProductNovaScore.group1 =>
-      'Aliments non transformés ou transformés minimalement',
+        'Aliments non transformés ou transformés minimalement',
       ProductNovaScore.group2 => 'Ingrédients culinaires transformés',
       ProductNovaScore.group3 => 'Aliments transformés',
       ProductNovaScore.group4 =>
-      'Produits alimentaires et boissons ultra-transformés',
+        'Produits alimentaires et boissons ultra-transformés',
       ProductNovaScore.unknown => 'Score non calculé',
     };
   }
@@ -398,7 +380,7 @@ class _GreenScore extends StatelessWidget {
       ProductGreenScore.D => AppIcons.ecoscore_d,
       ProductGreenScore.E => AppIcons.ecoscore_e,
       ProductGreenScore.F => AppIcons.ecoscore_f,
-    // TODO
+      // TODO
       ProductGreenScore.unknown => AppIcons.ecoscore_e,
     };
   }
@@ -412,7 +394,7 @@ class _GreenScore extends StatelessWidget {
       ProductGreenScore.D => AppColors.greenScoreD,
       ProductGreenScore.E => AppColors.greenScoreE,
       ProductGreenScore.F => AppColors.greenScoreF,
-    // TODO
+      // TODO
       ProductGreenScore.unknown => Colors.transparent,
     };
   }
@@ -436,7 +418,7 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = generateProduct();
+    final Product product = ProductProvider.of(context).product;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -517,9 +499,7 @@ class _ProductBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: ColorProvider
-            .of(context)
-            .color,
+        color: AppColors.blueLight,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsetsDirectional.symmetric(
