@@ -10,16 +10,30 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   flutter_svg: 2.1.0
+  intl: 0.20.2
+
   go_router: 15.1.2
   provider: 6.1.5
+  bloc: 9.0.0
+  flutter_bloc: 9.1.1
+
+  dio: 5.8.0+1
+  retrofit: 4.4.2
+  json_annotation: 4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^5.0.0
+  flutter_lints: 6.0.0
+
+  retrofit_generator: 9.2.0
+  json_serializable: any
+  build_runner: 2.4.15
 
 flutter:
   uses-material-design: true
@@ -42,3 +56,6 @@ flutter:
           weight: 500
         - asset: res/fonts/Avenir-Black.ttf
           weight: 900
+
+  # Generate translations
+  generate: true

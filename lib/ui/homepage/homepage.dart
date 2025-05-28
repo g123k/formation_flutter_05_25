@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled4/l10n/app_localizations.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/res/app_vectorial_images.dart';
@@ -10,37 +11,17 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mes scans'),
+        title: Text(appLocalizations.homepage_title),
         centerTitle: false,
         actions: [
           IconButton(
             onPressed: () async {
-              bool? res = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Ma question'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                        },
-                        child: Text('Oui'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                        child: Text('Non'),
-                      ),
-                    ],
-                  );
-                },
-              );
-
-              print(res);
+              // TODO Mettre le scanner ici
+              // GoRouter.of(context).push('/details?barcode=5000159484695');
             },
             icon: Padding(
               padding: const EdgeInsetsDirectional.only(end: 8.0),
@@ -59,7 +40,7 @@ class Homepage extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 4.0),
               child: Text(
-                'Vous n\'avez pas encore scanné de produit',
+                appLocalizations.homepage_empty,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -73,12 +54,12 @@ class Homepage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                GoRouter.of(context).push('/details');
+                GoRouter.of(context).push('/details?barcode=5000159484695');
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Commencer'.toUpperCase()),
+                  Text(appLocalizations.homepage_button.toUpperCase()),
                   const SizedBox(width: 10.0),
                   Icon(Icons.arrow_forward),
                 ],

@@ -1,0 +1,13 @@
+{
+  "retry": "Réessayer",
+  "homepage_title": "Mes scans",
+  "homepage_empty": "Vous n'avez pas encore scanné de produits.",
+  "homepage_button": "Commencer",
+  "product_quantity": "Quantité",
+  "product_countries": "Vendu en",
+  "product_vegan": "Végétalien",
+  "product_vegetarian": "Végétarien",
+  "product_nutri_score": "Nutri-Score",
+  "product_green_score": "Green-Score",
+  "product_nova_score": "Groupe NOVA"
+}

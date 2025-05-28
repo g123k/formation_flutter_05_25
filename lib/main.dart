@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled4/l10n/app_localizations.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/style.dart';
 import 'package:untitled4/ui/details/product_details.dart';
@@ -19,8 +20,10 @@ GoRouter _router = GoRouter(
       routes: [
         GoRoute(
           path: 'details',
-          builder: (_, _) {
-            return ProductDetails();
+          builder: (_, GoRouterState state) {
+            return ProductDetails(
+              barcode: state.uri.queryParameters['barcode'] ?? '',
+            );
           },
         ),
       ],
@@ -60,6 +63,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routerConfig: _router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

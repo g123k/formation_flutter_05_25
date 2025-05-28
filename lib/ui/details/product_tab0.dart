@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:untitled4/l10n/app_localizations.dart';
 import 'package:untitled4/model/product.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/style.dart';
-import 'package:untitled4/ui/details/product_details.dart';
-import 'package:untitled4/ui/details/product_notifier.dart';
+import 'package:untitled4/ui/details/product_bloc.dart';
 
 class ProductTab0 extends StatefulWidget {
   static const double kImageHeight = 300.0;
@@ -42,8 +42,6 @@ class _ProductTab0State extends State<ProductTab0> {
       context,
     );
 
-    Provider.of<ProductNotifier>(context).product;
-
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification notification) {
@@ -53,14 +51,20 @@ class _ProductTab0State extends State<ProductTab0> {
         child: SizedBox.expand(
           child: Stack(
             children: [
-              Image.network(
-                ProductProvider.of(context).product.picture ?? '',
-                width: double.infinity,
-                height: ProductTab0.kImageHeight,
-                cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
-                fit: BoxFit.cover,
-                color: Colors.black.withValues(alpha: _currentScrollProgress),
-                colorBlendMode: BlendMode.srcATop,
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (BuildContext context, ProductState state) {
+                  return Image.network(
+                    (state as SuccessProductState).product.picture ?? '',
+                    width: double.infinity,
+                    height: ProductTab0.kImageHeight,
+                    cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
+                    fit: BoxFit.cover,
+                    color: Colors.black.withValues(
+                      alpha: _currentScrollProgress,
+                    ),
+                    colorBlendMode: BlendMode.srcATop,
+                  );
+                },
               ),
               Positioned.fill(
                 child: SingleChildScrollView(
@@ -201,7 +205,9 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = ProductProvider.of(context).product;
+    final Product product =
+        (BlocProvider.of<ProductBloc>(context).state as SuccessProductState)
+            .product;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -224,8 +230,6 @@ class _Scores extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = ProductProvider.of(context).product;
-
     return DefaultTextStyle(
       style: context.theme.altText,
       child: Container(
@@ -247,9 +251,16 @@ class _Scores extends StatelessWidget {
                       flex: 44,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.only(end: 5.0),
-                        child: _Nutriscore(
-                          nutriscore:
-                              product.nutriScore ?? ProductNutriscore.unknown,
+                        child: BlocBuilder<ProductBloc, ProductState>(
+                          builder: (BuildContext context, ProductState state) {
+                            return _Nutriscore(
+                              nutriscore:
+                                  (state as SuccessProductState)
+                                      .product
+                                      .nutriScore ??
+                                  ProductNutriscore.unknown,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -258,9 +269,16 @@ class _Scores extends StatelessWidget {
                       flex: 66,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.only(start: 25.0),
-                        child: _NovaGroup(
-                          novaScore:
-                              product.novaScore ?? ProductNovaScore.unknown,
+                        child: BlocBuilder<ProductBloc, ProductState>(
+                          builder: (BuildContext context, ProductState state) {
+                            return _NovaGroup(
+                              novaScore:
+                                  (state as SuccessProductState)
+                                      .product
+                                      .novaScore ??
+                                  ProductNovaScore.unknown,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -274,8 +292,14 @@ class _Scores extends StatelessWidget {
                 vertical: _verticalPadding,
                 horizontal: _horizontalPadding,
               ),
-              child: _GreenScore(
-                greenScore: product.ecoScore ?? ProductGreenScore.unknown,
+              child: BlocBuilder<ProductBloc, ProductState>(
+                builder: (BuildContext context, ProductState state) {
+                  return _GreenScore(
+                    greenScore:
+                        (state as SuccessProductState).product.ecoScore ??
+                        ProductGreenScore.unknown,
+                  );
+                },
               ),
             ),
           ],
@@ -296,7 +320,10 @@ class _Nutriscore extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Nutri-Score', style: context.theme.title3),
+        Text(
+          AppLocalizations.of(context)!.product_nutri_score,
+          style: context.theme.title3,
+        ),
         const SizedBox(height: 5.0),
         Image.asset(_findAssetName(), width: 100.0),
       ],
@@ -326,7 +353,10 @@ class _NovaGroup extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Groupe Nova', style: context.theme.title3),
+        Text(
+          AppLocalizations.of(context)!.product_nova_score,
+          style: context.theme.title3,
+        ),
         const SizedBox(height: 5.0),
         Text(_findLabel(), style: const TextStyle(color: AppColors.gray2)),
       ],
@@ -357,7 +387,10 @@ class _GreenScore extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Green-Score', style: context.theme.title3),
+        Text(
+          AppLocalizations.of(context)!.product_green_score,
+          style: context.theme.title3,
+        ),
         const SizedBox(height: 5.0),
         Row(
           children: [
@@ -422,14 +455,20 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = ProductProvider.of(context).product;
+    final Product product =
+        (BlocProvider.of<ProductBloc>(context).state as SuccessProductState)
+            .product;
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _ProductItemValue(label: 'Quantité', value: product.quantity ?? '-'),
         _ProductItemValue(
-          label: 'Vendu',
+          label: appLocalizations.product_quantity,
+          value: product.quantity ?? '-',
+        ),
+        _ProductItemValue(
+          label: appLocalizations.product_countries,
           value: product.manufacturingCountries?.join(', ') ?? '-',
           includeDivider: false,
         ),
@@ -439,7 +478,7 @@ class _Info extends StatelessWidget {
             Expanded(
               flex: 40,
               child: _ProductBubble(
-                label: 'Végétalien',
+                label: appLocalizations.product_vegan,
                 value: product.isVegan == ProductAnalysis.yes
                     ? _ProductBubbleValue.on
                     : _ProductBubbleValue.off,
@@ -449,7 +488,7 @@ class _Info extends StatelessWidget {
             Expanded(
               flex: 40,
               child: _ProductBubble(
-                label: 'Végétarien',
+                label: appLocalizations.product_vegetarian,
                 value: product.isVegetarian == ProductAnalysis.yes
                     ? _ProductBubbleValue.on
                     : _ProductBubbleValue.off,

@@ -1,61 +1,107 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:untitled4/model/product.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled4/l10n/app_localizations.dart';
 import 'package:untitled4/res/app_icons.dart';
-import 'package:untitled4/ui/details/product_notifier.dart';
+import 'package:untitled4/ui/details/product_bloc.dart';
 import 'package:untitled4/ui/details/product_tab0.dart';
 import 'package:untitled4/ui/details/product_tab1.dart';
 import 'package:untitled4/ui/details/product_tab2.dart';
 import 'package:untitled4/ui/details/product_tab3.dart';
 
-class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key});
+class ProductDetails extends StatelessWidget {
+  const ProductDetails({required this.barcode, super.key})
+    : assert(barcode.length > 0, 'Barcode cannot be empty');
+
+  final String barcode;
 
   @override
-  State<ProductDetails> createState() => _ProductDetailsState();
+  Widget build(BuildContext context) {
+    return BlocProvider<ProductBloc>(
+      create: (_) => ProductBloc(barcode),
+      child: BlocBuilder<ProductBloc, ProductState>(
+        builder: (BuildContext context, ProductState state) {
+          return switch (state) {
+            LoadingProductState() => const _ProductDetailsLoading(),
+            SuccessProductState() => const _ProductDetailsBody(),
+            ErrorProductState() => const _ProductDetailsError(),
+          };
+        },
+      ),
+    );
+  }
 }
 
-class _ProductDetailsState extends State<ProductDetails> {
+class _ProductDetailsLoading extends StatelessWidget {
+  const _ProductDetailsLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
+  }
+}
+
+class _ProductDetailsBody extends StatefulWidget {
+  const _ProductDetailsBody();
+
+  @override
+  State<_ProductDetailsBody> createState() => _ProductDetailsBodyState();
+}
+
+class _ProductDetailsBodyState extends State<_ProductDetailsBody> {
   int _position = 0;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProductNotifier>(
-      create: (_) => ProductNotifier()..loadProduct(),
-      child: Consumer<ProductNotifier>(
-        builder: (BuildContext context, ProductNotifier notifier, _) {
-          if (notifier.product == null) {
-            return Scaffold(body: CircularProgressIndicator());
-          } else {
-            return ProductProvider(
-              product: notifier.product!,
-              child: Scaffold(
-                body: Stack(
-                  children: [
-                    Offstage(offstage: _position != 0, child: ProductTab0()),
-                    Offstage(offstage: _position != 1, child: ProductTab1()),
-                    Offstage(offstage: _position != 2, child: ProductTab2()),
-                    Offstage(offstage: _position != 3, child: ProductTab3()),
-                  ],
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: _position,
-                  onTap: (int position) => setState(() {
-                    _position = position;
-                  }),
-                  items: ProductDetailsCurrentTab.values
-                      .map((ProductDetailsCurrentTab tab) {
-                        return BottomNavigationBarItem(
-                          label: tab.label,
-                          icon: Icon(tab.icon),
-                        );
-                      })
-                      .toList(growable: false),
-                ),
-              ),
-            );
-          }
-        },
+    return Scaffold(
+      body: Stack(
+        children: [
+          Offstage(offstage: _position != 0, child: ProductTab0()),
+          Offstage(offstage: _position != 1, child: ProductTab1()),
+          Offstage(offstage: _position != 2, child: ProductTab2()),
+          Offstage(offstage: _position != 3, child: ProductTab3()),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _position,
+        onTap: (int position) => setState(() {
+          _position = position;
+        }),
+        items: ProductDetailsCurrentTab.values
+            .map((ProductDetailsCurrentTab tab) {
+              return BottomNavigationBarItem(
+                label: tab.label,
+                icon: Icon(tab.icon),
+              );
+            })
+            .toList(growable: false),
+      ),
+    );
+  }
+}
+
+class _ProductDetailsError extends StatelessWidget {
+  const _ProductDetailsError();
+
+  @override
+  Widget build(BuildContext context) {
+    final ProductBloc bloc = BlocProvider.of<ProductBloc>(context);
+
+    return Scaffold(
+      body: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              (bloc.state as ErrorProductState).error.toString(),
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+            SizedBox(height: 10.0),
+            OutlinedButton(
+              onPressed: () {},
+              child: Text(AppLocalizations.of(context)!.retry),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -71,26 +117,4 @@ enum ProductDetailsCurrentTab {
   final IconData icon;
 
   const ProductDetailsCurrentTab(this.label, this.icon);
-}
-
-class ProductProvider extends InheritedWidget {
-  const ProductProvider({
-    required this.product,
-    required super.child,
-    super.key,
-  });
-
-  final Product product;
-
-  static ProductProvider of(BuildContext context) {
-    final ProductProvider? result = context
-        .dependOnInheritedWidgetOfExactType<ProductProvider>();
-    assert(result != null, 'No ProductProvider found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(ProductProvider old) {
-    return product != old.product;
-  }
 }
