@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled4/model/product.dart';
 import 'package:untitled4/res/app_colors.dart';
 import 'package:untitled4/res/app_icons.dart';
 import 'package:untitled4/style.dart';
 import 'package:untitled4/ui/details/product_details.dart';
+import 'package:untitled4/ui/details/product_notifier.dart';
 
 class ProductTab0 extends StatefulWidget {
   static const double kImageHeight = 300.0;
@@ -39,6 +41,8 @@ class _ProductTab0State extends State<ProductTab0> {
     final ScrollController scrollController = PrimaryScrollController.of(
       context,
     );
+
+    Provider.of<ProductNotifier>(context).product;
 
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
