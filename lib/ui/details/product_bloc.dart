@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:untitled4/api/model/product_response.dart';
+import 'package:untitled4/api/openfoodfacts_api.dart';
 import 'package:untitled4/model/product.dart';
 
 abstract class ProductEvent {}
@@ -22,8 +24,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(const LoadingProductState());
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      final Product product = generateProduct();
+      final ProductAPIEntity response = await OpenFoodFactsAPIManager()
+          .loadProduct(event.barcode);
+      final Product product = response.response!.toProduct();
       emit(SuccessProductState(product: product));
     } catch (err) {
       emit(ErrorProductState(error: err));

@@ -169,11 +169,18 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Colors.white,
         borderRadius: const BorderRadiusDirectional.only(
           topStart: Radius.circular(16.0),
           topEnd: Radius.circular(16.0),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10.0,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       margin: EdgeInsetsDirectional.only(top: ProductTab0.kImageHeight - 16.0),
       child: const Column(
