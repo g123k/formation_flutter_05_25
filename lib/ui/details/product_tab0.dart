@@ -39,6 +39,8 @@ class _ProductTab0State extends State<ProductTab0> {
       context,
     );
 
+    Product product = generateProduct();
+
     return Scaffold(
       body: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification notification) {
@@ -49,7 +51,7 @@ class _ProductTab0State extends State<ProductTab0> {
           child: Stack(
             children: [
               Image.network(
-                'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=1310&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                product.picture ?? '',
                 width: double.infinity,
                 height: ProductTab0.kImageHeight,
                 cacheHeight: (ProductTab0.kImageHeight * 3).toInt(),
@@ -66,7 +68,11 @@ class _ProductTab0State extends State<ProductTab0> {
               PositionedDirectional(
                 child: _HeaderIcon(
                   icon: Icons.adaptive.arrow_back,
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                  tooltip: MaterialLocalizations
+                      .of(
+                    context,
+                  )
+                      .backButtonTooltip,
                   onPressed: () => GoRouter.of(context).pop(),
                 ),
               ),
@@ -117,37 +123,60 @@ class _HeaderIconState extends State<_HeaderIcon> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.all(8.0),
-        child: Material(
-          type: MaterialType.transparency,
-          child: Tooltip(
-            message: widget.tooltip,
-            child: InkWell(
-              onTap: widget.onPressed ?? () {},
-              customBorder: const CircleBorder(),
-              child: Ink(
-                padding: const EdgeInsetsDirectional.only(
-                  start: 18.0,
-                  end: 12.0,
-                  top: 15.0,
-                  bottom: 15.0,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: _opacity),
-                ),
-                child: Icon(
-                  widget.icon,
-                  color: Color.lerp(Colors.white, Colors.black, _opacity),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+        child: Padding(
+        padding: const EdgeInsetsDirectional.all(8.0)
+    ,
+    child
+    :
+    Material
+    (
+    type
+    :
+    MaterialType
+    .
+    transparency
+    ,
+    child
+    :
+    Tooltip
+    (
+    message
+    :
+    widget
+    .
+    tooltip
+    ,
+    child
+    :
+    InkWell
+    (
+    onTap
+    :
+    widget
+    .
+    onPressed ?? () {},
+    customBorder: const CircleBorder(),
+    child: Ink(
+    padding: const EdgeInsetsDirectional.only(
+    start: 18.0,
+    end: 12.0,
+    top: 15.0,
+    bottom: 15.0,
+    ),
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    color: Colors.white.withValues(alpha: _opacity),
+    ),
+    child: Icon(
+    widget.icon,
+    color: Color.lerp(Colors.white, Colors.black, _opacity),
+    ),
+    ),
+    ),
+    ),
+    ),
     );
-  }
+    }
 }
 
 class _Body extends StatelessWidget {
@@ -160,7 +189,9 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme
+            .of(context)
+            .scaffoldBackgroundColor,
         borderRadius: const BorderRadiusDirectional.only(
           topStart: Radius.circular(16.0),
           topEnd: Radius.circular(16.0),
@@ -319,11 +350,11 @@ class _NovaGroup extends StatelessWidget {
   String _findLabel() {
     return switch (novaScore) {
       ProductNovaScore.group1 =>
-        'Aliments non transformés ou transformés minimalement',
+      'Aliments non transformés ou transformés minimalement',
       ProductNovaScore.group2 => 'Ingrédients culinaires transformés',
       ProductNovaScore.group3 => 'Aliments transformés',
       ProductNovaScore.group4 =>
-        'Produits alimentaires et boissons ultra-transformés',
+      'Produits alimentaires et boissons ultra-transformés',
       ProductNovaScore.unknown => 'Score non calculé',
     };
   }
@@ -367,7 +398,7 @@ class _GreenScore extends StatelessWidget {
       ProductGreenScore.D => AppIcons.ecoscore_d,
       ProductGreenScore.E => AppIcons.ecoscore_e,
       ProductGreenScore.F => AppIcons.ecoscore_f,
-      // TODO
+    // TODO
       ProductGreenScore.unknown => AppIcons.ecoscore_e,
     };
   }
@@ -381,7 +412,7 @@ class _GreenScore extends StatelessWidget {
       ProductGreenScore.D => AppColors.greenScoreD,
       ProductGreenScore.E => AppColors.greenScoreE,
       ProductGreenScore.F => AppColors.greenScoreF,
-      // TODO
+    // TODO
       ProductGreenScore.unknown => Colors.transparent,
     };
   }
@@ -486,7 +517,9 @@ class _ProductBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.blueLight,
+        color: ColorProvider
+            .of(context)
+            .color,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsetsDirectional.symmetric(
@@ -513,21 +546,3 @@ class _ProductBubble extends StatelessWidget {
 }
 
 enum _ProductBubbleValue { on, off }
-
-class ProductIW extends InheritedWidget {
-  const ProductIW({super.key, required this.product, required super.child});
-
-  final Product product;
-
-  static ProductIW of(BuildContext context) {
-    final ProductIW? result = context
-        .dependOnInheritedWidgetOfExactType<ProductIW>();
-    assert(result != null, 'No ProductIW found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(ProductIW old) {
-    return product != old.product;
-  }
-}
